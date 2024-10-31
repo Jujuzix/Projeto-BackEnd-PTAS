@@ -1,4 +1,4 @@
-const express = require("express");
+const prisma = require("../prisma/prismaClient");
 const router = require("express").Router();
 
 const AuthController = require("../controllers/AuthController");
