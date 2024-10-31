@@ -1,38 +1,113 @@
-const { PrismaClient} = require("@prisma/client");
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+const bcryptjs = require("bcryptjs");
+
+const jwt = require("jsonwebtoken");
 
 class AuthController {
-    static async cadastro(req, res) {
-        const {nome, email, password, tipo} = req.body;
+  static async cadastro(req, res) {
+    const { nome, email, password } = req.body;
 
-        if(!nome || nome.length < 6){
-            return res.json({
-                erro: true,
-                mensagem:"O nome deve ter pelomenos 6 caracteres.",
-            });
-        }
-
-        return res.json({
-            erro: false,
-            mensagem:"Usuário Cadastrado.",
-            token:"jasjdskadklasjdksjkladsklldkl",
-        });
-
+    if (!nome || nome.length < 6) {
+      return res.json({
+        erro: true,
+        mensagem: "O nome deve ter pelo menos 6 caracteres.",
+      });
     }
 
-    static async login(req, res) {
-        res.json({
-            email: req.body.email,
-            senha: req.body.password,
-        });
+    if (!email || email.length < 10) {
+      return res.json({
+        erro: true,
+        mensagem: "O email deve ter pelo menos 10 caracteres.",
+      });
     }
 
-    static async loginForm(req, res){
-        res.send(
-            "<form action='/auth/login' method='post'><input type='email' name='email'><input type='password' name='password'><input type='submit' value='Entrar'></form>"
-        );
+    if (!password || password.length < 8) {
+      return res.json({
+        erro: true,
+        mensagem: "A senha deve ter pelo menos 8 caracteres.",
+      });
     }
+
+    const existe = await prisma.usuario.count({
+      where: {
+        email: email,
+      },
+    });
+
+    if (existe != 0) {
+      return res.json({
+        erro: true,
+        mensagem: "Já existe um usuário com este e-mail",
+      });
+    }
+
+    const salt = bcryptjs.genSaltSync(8);
+    const hashPassword = bcryptjs.hashSync(password, salt);
+
+    try {
+      const usuario = await prisma.usuario.create({
+        data: {
+          nome: nome,
+          email: email,
+          password: hashPassword,
+          tipo: "cliente",
+        },
+      });
+
+      console.log(JSON.stringify(usuario));
+      const token = jwt.sign({ id: usuario.id }, process.env.SECRET_KEY, {
+        expiresIn: "1h",
+      });
+
+      return res.json({
+        erro: false,
+        mensagem: "Usuario cadastrado com sucesso!",
+      });
+    } catch (error) {
+      return res.json({
+        erro: true,
+        mensagem: "Ocorreu um erro, tente novamente mais tarde!" + error,
+      });
+    }
+  }
+  static async login(req, res) {
+    const { email, password } = req.body;
+
+    const usuario = await prisma.usuario.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    if (!usuario) {
+      return res.json({
+        erro: true,
+        mensagem: "Usuário não encontrado.",
+      });
+    }
+
+    //Verificação da senha
+
+    const senhaCorreta = bcryptjs.compareSync(password, usuario.password);
+
+    if (!senhaCorreta) {
+      return res.json({
+        erro: true,
+        mensagem: "Senha incorreta.",
+      });
+    }
+    const token = jwt.sign({ id: usuario.id }, process.env.SECRET_KEY, {
+      expiresIn: "1h",
+    });
+
+    res.json({
+      erro: false,
+      mensagem: "Autenticação realizada com sucesso!",
+      token: "nfjodshgbdzbuhsiobhas",
+    })
+  }
 }
 
-module.exports = AuthController
+module.exports = AuthController;
