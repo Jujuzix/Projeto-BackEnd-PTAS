@@ -20,3 +20,19 @@ model Usuario{
   password String
   tipo String
 }
+
+model usuarioAdm {
+  id       Int    @id @default(autoincrement())
+  nome     String
+  email    String @unique
+  password String
+  tipo     String
+}
+
+model reservaMesas {
+    id           Int      @id @default(autoincrement())
+    nome_reserva String
+    data_reserva DateTime
+    n_pessoas    Int
+    tipo         String
+}
