@@ -4,7 +4,6 @@
     "bcryptjs": "^2.4.3",
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
-    "nodemon": "^3.1.7",
     "prisma": "^5.20.0"
   },
   "name": "projeto-backend-ptas",
@@ -13,8 +12,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "dev": "node --watch index.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
 }
