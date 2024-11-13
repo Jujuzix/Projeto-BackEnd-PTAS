@@ -1,8 +1,12 @@
+const cors = require("cors")
 const prisma = require("./prisma/prismaClient");
 
 const express = require("express");
 
 const app = express();
+app.use(cors({
+    origin:"http://localhost:3000"
+}))
 app.use(express.json());
 
 app.use(express.urlencoded({extended: true}));
