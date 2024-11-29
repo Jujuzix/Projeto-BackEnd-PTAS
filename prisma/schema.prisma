@@ -13,19 +13,25 @@ model Usuario {
   email    String @unique
   password String
   tipo     String
+  reservas Reserva[]
 }
 
 model Reserva {
   id           Int      @id @default(autoincrement())
-  n_mesa       Int
+  usuario_id   Int
+  n_mesa      Int
   data_reserva DateTime
   n_pessoas    Int
-  tipo         String
+  status       Boolean
+  usuario      Usuario @relation(fields: [usuario_id], references: [id])
+  mesa         Mesa    @relation(fields: [n_mesa], references: [id])
 }
 
 model Mesa {
-  id        Int    @id @default(autoincrement())
-  n_mesa    Int
+  id        Int      @id @default(autoincrement())
+  n_mesa    Int      @unique
   n_pessoas Int
-  tipo      String
+  tipo      String   
+  reservas  Reserva[]
 }
+

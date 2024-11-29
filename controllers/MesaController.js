@@ -76,6 +76,8 @@ class MesaController {
           n_mesa, 
           data_reserva: dataReserva, 
           n_pessoas, 
+          usuario,
+          usuario_id,
           tipo: "Reserva"
         },
       });

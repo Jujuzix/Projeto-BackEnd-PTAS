@@ -47,7 +47,7 @@ class AuthController {
     res.status(200).json({ erro: false, mensagem: "Autenticação realizada com sucesso!", token });
   }
 
-  /* // Método para cadastro de novos administradores
+  // Método para cadastro de novos administradores
    static async cadastroAdm(req, res) {
      const { nome, email, password } = req.body;
  
@@ -86,7 +86,7 @@ class AuthController {
  
      const token = jwt.sign({ id: usuarioAdm.id }, process.env.SECRET_KEY, { expiresIn: "1h" });
      res.status(200).json({ erro: false, mensagem: "Autenticação realizada com sucesso!", token });
-   }*/
+   }
 }
 
 module.exports = AuthController;
