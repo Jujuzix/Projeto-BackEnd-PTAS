@@ -17,7 +17,7 @@ model Usuario {
 
 model Reserva {
   id           Int      @id @default(autoincrement())
-  nome_reserva String
+  n_mesa       Int
   data_reserva DateTime
   n_pessoas    Int
   tipo         String
@@ -25,7 +25,7 @@ model Reserva {
 
 model Mesa {
   id        Int    @id @default(autoincrement())
-  codigo    String @unique
+  n_mesa    Int
   n_pessoas Int
   tipo      String
 }

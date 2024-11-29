@@ -15,6 +15,6 @@ app.use(express.urlencoded({extended: true}));
 const authRoutes = require("./routes/authRoute");
 app.use("/auth", authRoutes); 
 const mesaRoutes = require("./routes/mesaRoute");
-app.use("/mesa", mesaRoutes); 
+app.use("/mesas", mesaRoutes); 
 
 app.listen(8000);
