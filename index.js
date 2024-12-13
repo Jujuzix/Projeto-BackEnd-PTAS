@@ -17,9 +17,9 @@ app.use(express.urlencoded({ extended: true }));
 const authRoutes = require("./routes/authRoute");
 app.use("/auth", authRoutes);
 const mesaRoutes = require("./routes/mesaRoute");
-app.use("/mesas", mesaRoutes);
-
-app.use("/perfil" , AuthController.verficarAutenticacao, perfilRoutes);
+app.use("/mesas", AuthController.verficarAutenticacao, mesaRoutes);
+const profileRoutes = require("./routes/profileRoutes");
+app.use("/perfil" , AuthController.verficarAutenticacao, profileRoutes);
 
 app.get("/privado", AuthController.verficarAutenticacao, (req, res) => {
     res.json({
