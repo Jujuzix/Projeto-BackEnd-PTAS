@@ -35,6 +35,7 @@ class MesaController {
   }
 
   static async reservar(req, res) {
+console.log(req.body)
     const { n_mesa, data_reserva, n_pessoas } = req.body;
 
     if (!n_mesa) {
