@@ -49,7 +49,7 @@ class AuthController {
 
   static async verficarAutenticacao(req, res, next) {
     const authHeader = req.headers["authorization"];
-    console.log(authHeader)
+    console.log("token gerado" + authHeader)
     const token = authHeader;
     if (!token) {
       return res.status(422).json({ messsage: "TOken não encontrado" })

@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 class MesaController {
   static async cadastrar(req, res) {
     const { n_mesa, n_pessoas } = req.body;
+    console.log(req.body)
 
     if (!n_mesa) {
       return res.status(422).json({ erro: true, mensagem: "O código da mesa é obrigatório." });

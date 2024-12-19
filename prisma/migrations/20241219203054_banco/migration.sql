@@ -23,7 +23,8 @@ CREATE TABLE "Reserva" (
 CREATE TABLE "Mesa" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "n_mesa" INTEGER NOT NULL,
-    "n_pessoas" INTEGER NOT NULL
+    "n_pessoas" INTEGER NOT NULL,
+    "tipo" TEXT NOT NULL
 );
 
 -- CreateIndex
