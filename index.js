@@ -19,10 +19,4 @@ app.use("/mesas", AuthController.verficarAutenticacao, mesaRoutes);
 const profileRoutes = require("./routes/profileRoutes");
 app.use("/perfil" , AuthController.verficarAutenticacao, profileRoutes);
 
-app.get("/privado", AuthController.verficarAutenticacao, (req, res) => {
-    res.json({
-        msg: "Voce entrou em area privada"
-    });
-});
-
 app.listen(8000);
