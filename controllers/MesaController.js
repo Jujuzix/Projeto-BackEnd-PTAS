@@ -36,48 +36,56 @@ class MesaController {
   }
 
   static async reservar(req, res) {
-console.log(req.body)
-    const { n_mesa, data_reserva, n_pessoas } = req.body;
+    console.log("Body recebido:", req.body);
 
-    if (!n_mesa) {
+    const { n_mesa, data_reserva, n_pessoas } = req.body;
+    console.log("Dados extraídos:", { n_mesa, data_reserva, n_pessoas });
+  
+    if (!n_mesa || isNaN(n_mesa)) {
       return res.status(422).json({ erro: true, mensagem: "O número da mesa é obrigatório." });
     }
-
-    if (!n_pessoas || isNaN(n_pessoas) || n_pessoas <= 0) {
-      return res.status(422).json({ erro: true, mensagem: `O número de pessoas deve ser um valor positivo. Valor recebido: ${n_pessoas}` });
-    }
-
+  
     const dataReserva = new Date(data_reserva);
-    if (isNaN(dataReserva.getTime())) {
-      return res.status(422).json({ erro: true, mensagem: "A data da reserva deve ser uma data válida." });
+    dataReserva.setHours(0, 0, 0, 0);
+  
+    if (isNaN(dataReserva.getTime()) || dataReserva < new Date()) {
+      return res.status(422).json({ erro: true, mensagem: "A data da reserva deve ser válida e no futuro." });
     }
-
+  
     try {
-      const existe = await prisma.reserva.findFirst({
-        where: {
-          data_reserva: dataReserva
-        },
-      });
-
-      if (existe) {
-        return res.status(422).json({ erro: true, mensagem: "A mesa selecionada já está ocupada nesta data." });
+      const mesa = await prisma.mesa.findUnique({ where: { n_mesa } });
+      if (!mesa) {
+        return res.status(404).json({ erro: true, mensagem: "Mesa não encontrada." });
       }
-
+  
+      if (n_pessoas > mesa.n_pessoas) {
+        return res.status(422).json({ erro: true, mensagem: `O número de pessoas excede a capacidade da mesa (${mesa.n_pessoas}).` });
+      }
+  
+      const reservaExistente = await prisma.reserva.findFirst({
+        where: { n_mesa, data_reserva: dataReserva },
+      });
+  
+      if (reservaExistente) {
+        return res.status(422).json({ erro: true, mensagem: "A mesa já está reservada nesta data." });
+      }
+  
       await prisma.reserva.create({
-        data: { 
-          n_mesa, 
-          data_reserva: dataReserva, 
-          n_pessoas, 
+        data: {
+          n_mesa,
+          data_reserva: dataReserva,
+          n_pessoas,
           usuario_id: req.usuarioId,
-          status: true
+          status: true,
         },
       });
-
-      return res.status(201).json({ erro: false, mensagem: "Reserva cadastrada com sucesso!" });
+  
+      return res.status(201).json({ erro: false, mensagem: "Reserva realizada com sucesso!" });
     } catch (error) {
-      return res.status(500).json({ erro: true, mensagem: "Ocorreu um erro ao efetuar sua reserva. " + error.message });
+      console.error("Erro no servidor:", error);
+      return res.status(500).json({ erro: true, mensagem: "Erro interno ao processar a reserva." });
     }
   }
-}
+}  
 
 module.exports = MesaController;
