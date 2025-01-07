@@ -48,7 +48,7 @@ class MesaController {
     const dataReserva = new Date(data_reserva);
     dataReserva.setHours(0, 0, 0, 0);
   
-    if (isNaN(dataReserva.getTime()) || dataReserva < new Date()) {
+    if (dataReserva < new Date()) {
       return res.status(422).json({ erro: true, mensagem: "A data da reserva deve ser válida e no futuro." });
     }
   
