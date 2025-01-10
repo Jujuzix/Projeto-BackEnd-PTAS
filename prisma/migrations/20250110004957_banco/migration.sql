@@ -15,6 +15,7 @@ CREATE TABLE "Reserva" (
     "data_reserva" DATETIME NOT NULL,
     "n_pessoas" INTEGER NOT NULL,
     "status" BOOLEAN NOT NULL,
+    "n_pessoas_sentando" INTEGER NOT NULL,
     CONSTRAINT "Reserva_usuario_id_fkey" FOREIGN KEY ("usuario_id") REFERENCES "Usuario" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "Reserva_n_mesa_fkey" FOREIGN KEY ("n_mesa") REFERENCES "Mesa" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );

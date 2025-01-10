@@ -26,6 +26,7 @@ model Reserva {
   status       Boolean
   usuario      Usuario @relation(fields: [usuario_id], references: [id])
   mesa         Mesa    @relation(fields: [n_mesa], references: [id])
+  n_pessoas_sentando Int
 }
 
 model Mesa {
